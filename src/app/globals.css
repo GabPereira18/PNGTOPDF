@@ -1,0 +1,134 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+@layer base {
+  :root {
+    --background: 225 30% 8%; /* Azul muito escuro (para fundos sólidos sobre o gradiente) */
+    --foreground: 0 0% 98%; /* Branco quase puro */
+    
+    --card: 225 30% 18%; /* Azul escuro sólido para cards */
+    --card-foreground: 0 0% 98%; /* Branco quase puro */
+    
+    --popover: 225 28% 15%; /* Um pouco mais escuro que o card */
+    --popover-foreground: 0 0% 98%;
+    
+    --primary: 225 73% 60%; /* Azul Royal Vibrante */
+    --primary-foreground: 0 0% 100%; /* Branco */
+    
+    --secondary: 225 25% 30%; /* Cinza azulado */
+    --secondary-foreground: 0 0% 98%;
+    
+    --muted: 225 20% 25%; /* Cinza azulado mais escuro */
+    --muted-foreground: 210 15% 85%; /* Cinza claro - AUMENTADO BRILHO de 70% para 85% */
+    
+    --accent: 170 80% 50%; /* Ciano Brilhante / Verde Água */
+    --accent-foreground: 170 100% 10%; /* Texto escuro para o accent */
+    
+    --destructive: 0 65% 55%; /* Vermelho */
+    --destructive-foreground: 0 0% 98%;
+    
+    --border: 225 20% 25%; /* Borda azulada/acinzentada */
+    --input: 225 25% 25%; /* Fundo do input, mais claro - AJUSTADO de 15% para 25% */
+    --ring: 225 73% 60%; /* Azul Royal para anéis de foco */
+    
+    --chart-1: 225 73% 60%;
+    --chart-2: 170 80% 50%;
+    --chart-3: 200 70% 55%;
+    --chart-4: 250 65% 65%;
+    --chart-5: 300 75% 60%;
+    --radius: 0.5rem;
+
+    /* Variáveis de Sidebar (mantendo a estrutura, com cores escuras) */
+    --sidebar-background: 225 25% 12%; /* Azul bem escuro para sidebar */
+    --sidebar-foreground: 0 0% 95%;
+    --sidebar-primary: 225 73% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 170 80% 50%;
+    --sidebar-accent-foreground: 170 100% 10%;
+    --sidebar-border: 225 20% 20%;
+    --sidebar-ring: 225 73% 60%;
+  }
+
+  .dark {
+    /* Mantendo .dark igual a :root para um tema escuro consistente */
+    --background: 225 30% 8%; 
+    --foreground: 0 0% 98%; 
+    
+    --card: 225 30% 18%; 
+    --card-foreground: 0 0% 98%;
+    
+    --popover: 225 28% 15%;
+    --popover-foreground: 0 0% 98%;
+    
+    --primary: 225 73% 60%; 
+    --primary-foreground: 0 0% 100%; 
+    
+    --secondary: 225 25% 30%; 
+    --secondary-foreground: 0 0% 98%;
+    
+    --muted: 225 20% 25%; 
+    --muted-foreground: 210 15% 85%; /* Cinza claro - AUMENTADO BRILHO de 70% para 85% */
+    
+    --accent: 170 80% 50%; 
+    --accent-foreground: 170 100% 10%; 
+    
+    --destructive: 0 65% 55%;
+    --destructive-foreground: 0 0% 98%;
+    
+    --border: 225 20% 25%; 
+    --input: 225 25% 25%; /* Fundo do input, mais claro - AJUSTADO de 15% para 25% */
+    --ring: 225 73% 60%; 
+    
+    --chart-1: 225 73% 60%;
+    --chart-2: 170 80% 50%;
+    --chart-3: 200 70% 55%;
+    --chart-4: 250 65% 65%;
+    --chart-5: 300 75% 60%;
+
+    --sidebar-background: 225 25% 12%;
+    --sidebar-foreground: 0 0% 95%;
+    --sidebar-primary: 225 73% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 170 80% 50%;
+    --sidebar-accent-foreground: 170 100% 10%;
+    --sidebar-border: 225 20% 20%;
+    --sidebar-ring: 225 73% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    height: 100%; /* Garante que o html ocupe toda a altura */
+  }
+  body {
+    position: relative; /* Necessário para o posicionamento do pseudo-elemento */
+    min-height: 100vh; /* Garante que o body ocupe pelo menos a altura da viewport */
+    @apply text-foreground; /* A cor do texto virá da variável --foreground */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden; /* Previne scroll horizontal que o ::before poderia causar em alguns casos */
+  }
+  body::before {
+    content: "";
+    position: fixed; /* Fixo em relação à viewport */
+    top: 0;
+    left: 0;
+    width: 100vw; /* Ocupa toda a largura da viewport */
+    height: 100vh; /* Ocupa toda a altura da viewport */
+    background-image: linear-gradient(to bottom, hsl(240, 30%, 8%), hsl(225, 60%, 35%));
+    z-index: -1; /* Coloca o degradê atrás do conteúdo do body */
+  }
+}
+
+.text-white-shadow {
+  text-shadow: 1px 1px 3px hsl(var(--foreground) / 0.6);
+}
