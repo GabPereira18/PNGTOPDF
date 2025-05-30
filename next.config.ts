@@ -18,6 +18,11 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  api: {
+    bodyParser: {
+      sizeLimit: '4mb', // Aumenta o limite do corpo da requisição para 4MB
+    },
+  },
 };
 
 export default nextConfig;

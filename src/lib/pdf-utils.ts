@@ -19,7 +19,6 @@ export const generatePdfFromImages = async (images: SelectedImage[], fileName: s
       pdf.addPage();
     }
 
-    // Cria um novo Object URL especificamente para carregar as dimensões da imagem de forma segura
     const dimensionLoadingUrl = URL.createObjectURL(imageFile);
     let imageElement: HTMLImageElement;
 
@@ -28,21 +27,16 @@ export const generatePdfFromImages = async (images: SelectedImage[], fileName: s
         const img = new Image();
         img.onload = () => resolve(img);
         img.onerror = (err) => {
-          // Este console.error agora inclui a URL usada, para melhor depuração
           console.error(`Erro ao carregar imagem para dimensões: ${imageFile.name}. URL usada: ${dimensionLoadingUrl}`, err);
           reject(new Error(`Falha ao carregar imagem para dimensões: ${imageFile.name}`));
         };
         img.src = dimensionLoadingUrl;
       });
     } catch (dimensionError) {
-        // Se o carregamento para dimensões falhou, não podemos prosseguir com esta imagem.
-        // O bloco finally abaixo ainda será executado para revogar a URL.
         console.error(`Interrompendo geração de PDF para ${imageFile.name} devido a erro no carregamento de dimensões.`);
-        URL.revokeObjectURL(dimensionLoadingUrl); // Garante a revogação mesmo se a promise rejeitar cedo
-        throw dimensionError; // Re-lança o erro para ser tratado pelo chamador
+        URL.revokeObjectURL(dimensionLoadingUrl);
+        throw dimensionError;
     } finally {
-        // Garante que a URL temporária seja revogada.
-        // Isso será executado após o bloco try (e seu await) ou após o bloco catch (se um erro ocorreu na promise).
         URL.revokeObjectURL(dimensionLoadingUrl);
     }
 
@@ -69,21 +63,25 @@ export const generatePdfFromImages = async (images: SelectedImage[], fileName: s
     
     const fileType = imageFile.type === 'image/png' ? 'PNG' : 'JPEG';
     
-    // Método primário: Usar ArrayBuffer
     const arrayBuffer = await imageFile.arrayBuffer();
     const uint8Array = new Uint8Array(arrayBuffer);
 
     try {
-        pdf.addImage(uint8Array, fileType, x, y, pdfImgWidth, pdfImgHeight);
+        if (fileType === 'JPEG') {
+            pdf.addImage(uint8Array, fileType, x, y, pdfImgWidth, pdfImgHeight, undefined, 'FAST');
+        } else {
+            pdf.addImage(uint8Array, fileType, x, y, pdfImgWidth, pdfImgHeight);
+        }
     } catch (e) {
       console.warn(`Falha ao adicionar imagem '${imageFile.name}' usando Uint8Array. Tentando fallback com HTMLImageElement carregado. Erro: ${e instanceof Error ? e.message : String(e)}`);
       try {
-        // Fallback: Usar o HTMLImageElement que foi carregado com sucesso para as dimensões
-        pdf.addImage(imageElement, fileType, x, y, pdfImgWidth, pdfImgHeight);
+        if (fileType === 'JPEG') {
+            pdf.addImage(imageElement, fileType, x, y, pdfImgWidth, pdfImgHeight, undefined, 'FAST');
+        } else {
+            pdf.addImage(imageElement, fileType, x, y, pdfImgWidth, pdfImgHeight);
+        }
       } catch (fallbackError) {
         console.error(`Método de fallback (HTMLImageElement) também falhou para '${imageFile.name}'. Erro: ${fallbackError instanceof Error ? fallbackError.message : String(fallbackError)}`);
-        // Propaga o erro, esta imagem não pode ser adicionada.
-        // A notificação (toast) no componente principal tratará isso e informará o usuário.
         throw new Error(`Falha ao adicionar imagem ${imageFile.name} ao PDF após múltiplas tentativas.`);
       }
     }
