@@ -4,8 +4,6 @@ Uma aplicação web simples e eficiente para converter múltiplas imagens (como 
 
 Criado especialmente em função do Sr. João Pereira (Pai do desenvolvedor) o qual sempre necessita de suporte nesta demanda.
 
-** Acesse a aplicação em: https://paipngtopdf.vercel.app/ **
-
 ## Funcionalidades Principais
 
 *   **Seleção Múltipla de Imagens:** Carregue arquivos JPG e PNG do seu dispositivo.
